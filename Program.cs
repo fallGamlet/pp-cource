@@ -14,12 +14,24 @@ namespace http_proj
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Main start " + GetThreadId());
+            Console.WriteLine("Welcome my program");
+            printArgs(args);
+            var count = 1;
+            if (args.Length >= 1) {
+                count = int.Parse(args[0]);
+            }
+            textsUseCase(count);
+            Console.WriteLine("Program finished");
+        }
 
-            textsUseCase();
-
-            Console.WriteLine("Press <any key> for exit");
-            Console.ReadKey();
+        static void printArgs(string[] args) 
+        {
+            Console.WriteLine("Arguments:");
+            foreach (var arg in args)
+            {
+                Console.WriteLine(arg);
+            }
+            Console.WriteLine("end arguments");
         }
 
         static int GetThreadId()
@@ -27,40 +39,42 @@ namespace http_proj
             return Thread.CurrentThread.ManagedThreadId;
         }
 
-        static void textsUseCase()
+        static void textsUseCase(int count)
         {
-            var task= getTexts();
+            Console.WriteLine("Start get ToDo list");
+            var task = getTodos(count);
             task.Wait();
-            var texts = task.Result;
-            var text = string.Join(", ", texts.ToArray());
-            Console.WriteLine("Result: {0}", text);
+            var todoList = task.Result;
+            var text = getTotoListText(todoList);
+            Console.WriteLine("Result: \n{0}", text);
         }
+        
 
-        static async Task<List<string>> getTexts()
+        static async Task<List<TodoItem>> getTodos(int count)
         {
-            var text1 = await getText1();
-            var text2 = await getText2();
-            return new List<string>() { text1, text2 };
+            var items = new List<TodoItem>();
+            for (int i = 0; i < count; i++)
+            {
+                items.Add(await getToDo(i+1));
+            }
+            return items;
         }
 
-        static async Task<string> getText1()
-        {
-            var client = new RestClient("https://jsonplaceholder.typicode.com");
-            client.UseNewtonsoftJson();
-            var request = new RestRequest("todos/1", DataFormat.Json);
-            TodoItem item = await client.GetAsync<TodoItem>(request);
-            
-            return item.ToString();
-        }
-
-        static async Task<string> getText2()
+        static async Task<TodoItem> getToDo(long id)
         {
             var client = new RestClient("https://jsonplaceholder.typicode.com");
             client.UseNewtonsoftJson();
-            var request = new RestRequest("todos/2", DataFormat.Json);
-            TodoItem item = await client.GetAsync<TodoItem>(request);
-            
-            return item.ToString();
+            var request = new RestRequest($"todos/{id}", DataFormat.Json);
+            return await client.GetAsync<TodoItem>(request);
+        }
+
+        static String getTotoListText(List<TodoItem> items) {
+            var textBuilder = new StringBuilder();
+            foreach (var item in items)
+            {
+                textBuilder.AppendLine(item.ToString());
+            }
+            return textBuilder.ToString();
         }
     }
 
