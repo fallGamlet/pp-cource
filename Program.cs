@@ -55,8 +55,12 @@ namespace http_proj
 
         static async Task<string> getText2()
         {
-            Thread.Sleep(100);
-            return "async text 2";
+            var client = new RestClient("https://jsonplaceholder.typicode.com");
+            client.UseNewtonsoftJson();
+            var request = new RestRequest("todos/2", DataFormat.Json);
+            TodoItem item = await client.GetAsync<TodoItem>(request);
+            
+            return item.ToString();
         }
     }
 
