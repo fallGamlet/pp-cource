@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GeoLocate;
+using Wheathers;
 
 namespace http_proj
 {
@@ -13,10 +14,7 @@ namespace http_proj
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome my program");
-            printArgs(args);
-            
-            geoLocationUseCase();
-
+            WheatherUseCase();
             Console.WriteLine("Program finished");
         }
 
@@ -35,12 +33,17 @@ namespace http_proj
             return Thread.CurrentThread.ManagedThreadId;
         }
 
-        static void geoLocationUseCase() {
-            var geoLocate = new GeoLocation();
-            var task = geoLocate.GetAsync();
+        static void WheatherUseCase() {
+            var task = GetWheather();
             task.Wait();
-            var location = task.Result;
-            Console.WriteLine($"Location: {location}");
+            var whather = task.Result;
+            Console.WriteLine($"Whather: ");
+            Console.WriteLine(whather);
+        }
+
+        static async Task<Wheather> GetWheather() {
+            var location = await new GeoLocation().GetAsync();
+            return await new WheatherManager().getWheatherAsync(location.Lat, location.Lng);
         }
     }
 }
