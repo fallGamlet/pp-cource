@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GeoLocate;
 using Wheathers;
+using Telegram;
 
 namespace http_proj
 {
@@ -14,7 +15,11 @@ namespace http_proj
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome my program");
-            WheatherUseCase();
+            
+            var bot = new TelegramBot("token-of-your-bot-here");
+            var botTask = bot.Run();            
+            botTask.Wait();
+
             Console.WriteLine("Program finished");
         }
 
