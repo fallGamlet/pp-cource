@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GeoLocate;
 using Wheathers;
 using Telegram;
+using Configuration;
 
 namespace http_proj
 {
@@ -16,7 +17,8 @@ namespace http_proj
         {
             Console.WriteLine("Welcome my program");
             
-            var bot = new TelegramBot("token-of-your-bot-here");
+            var config = new Config("./config.ini");
+            var bot = new Telegram.Bot(config.getValue("telegram-bot"));
             var botTask = bot.Run();            
             botTask.Wait();
 
