@@ -45,7 +45,7 @@ namespace Tests {
       var lastItem2 = allItems[ ^ 1];
       lastItem2.Print ();
 
-      var items0to4 = allItems[0. .4];
+      var items0to4 = allItems[0..4];
       items0to4.Print ();
 
       var itemsTo4 = allItems[..4];
@@ -60,7 +60,7 @@ namespace Tests {
       var index = ^ 0;
       index.Print ();
 
-      var range = 2. .4;
+      var range = 2..4;
       range.Print ();
 
       RunWithoutException (() => {
@@ -69,7 +69,7 @@ namespace Tests {
       });
 
       RunWithoutException (() => {
-        var outOfRangeItems = allItems[6. .14];
+        var outOfRangeItems = allItems[6..14];
         outOfRangeItems.Print ();
       });
 
